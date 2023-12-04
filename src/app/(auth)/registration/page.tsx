@@ -1,3 +1,4 @@
+import RegistrationForm from '@/components/forms/auth/admin/RegistrationForm'
 import { FC } from 'react'
 
 interface pageProps {
@@ -5,7 +6,7 @@ interface pageProps {
 }
 
 const page: FC<pageProps> = ({}) => {
-  return <div>page</div>
+  return <RegistrationForm />
 }
 
 export default page
