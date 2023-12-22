@@ -13,18 +13,18 @@ export function MainNav({
 
     const routes = [
         {
-            href: '/null1',
-            label: 'Overview',
-            active: pathName === '/null1'
+            href: '/admin/dashboard',
+            label: 'Feed',
+            active: pathName === '/admin/dashboard'
         },
         {
-            href: `/null2`,
-            label: 'New Extension',
-            active: pathName === `/null2`
+            href: `/admin/dashboard/trainings`,
+            label: 'Records',
+            active: pathName === `/admin/dashboard/trainings`
         },
         {
             href: `/null3`,
-            label: 'Logs',
+            label: 'Documents',
             active: pathName === `/null3`
         },
     ]

@@ -18,43 +18,17 @@ model Admin {
   password  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  postedTrainings  Training[] @relation("PostedBy")
-  updatedTrainings Training[] @relation("UpdatedBy")
-  updates          Update[]
-}
-
-model Document {
-  id         String   @id @default(uuid())
-  title      String
-  link       String
-  trainingId String
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  training   Training @relation(fields: [trainingId], references: [id])
 }
 
 model Training {
-  id           String     @id @default(uuid())
-  name         String
-  description  String
-  trainer      String[]
-  participants String[]
-  documents    Document[]
-  startDate    DateTime
-  endDate      DateTime
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
-  postedById   String
-  postedBy     Admin      @relation("PostedBy", fields: [postedById], references: [id])
-  updatedById  String
-  updatedBy    Admin      @relation("UpdatedBy", fields: [updatedById], references: [id])
-}
-
-model Update {
   id          String   @id @default(uuid())
+  title       String
   description String
-  updateById  String
-  updateBy    Admin    @relation(fields: [updateById], references: [id])
+  trainer     String
+  startDate   DateTime
+  endDate     DateTime
   createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  createdBy   String
+  updatedBy   String
 }
