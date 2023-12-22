@@ -17,9 +17,6 @@ const Client: FC<ClientProps> = ({
   data
 }) => {
   const router = useRouter()
-  const params = useParams()
-
-  console.log(data)
 
   return (
     <>
@@ -34,7 +31,7 @@ const Client: FC<ClientProps> = ({
         </Button>
       </div>
       <Separator />
-      <DataTable columns={Columns} data={data} searchKey='title'/>
+      <DataTable columns={Columns} data={data} searchKey='title' />
     </>
 
   )

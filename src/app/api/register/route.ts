@@ -38,7 +38,6 @@ export async function POST(
         return NextResponse.json(admin)
     } catch (error) {
         console.log(error)
-        console.log(`Name: ${name}, Username: ${username}, Email: ${email}, Password: ${password}`)
         return new NextResponse('internal server error', { status: 500 })
     }
 }

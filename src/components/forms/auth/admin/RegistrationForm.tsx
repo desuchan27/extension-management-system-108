@@ -65,10 +65,8 @@ const RegistrationForm: FC<RegistrationFormProps> = ({
     });
 
       if (!data) {
-        console.log(data)
         toast.error("Server error")
       } else {
-        console.log(data)
         router.push('/login')
         toast.success("Registration successful")
       }

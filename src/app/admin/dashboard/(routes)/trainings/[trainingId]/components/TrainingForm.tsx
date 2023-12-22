@@ -17,6 +17,7 @@ import { useRouter, useParams } from "next/navigation"
 import AlertModal from "@/components/modals/AlertModal"
 import { Textarea } from "@/components/ui/textarea"
 import { useSession } from "next-auth/react"
+import { format } from "date-fns"
 
 const formSchema = z.object({
   title: z.string().min(1),
@@ -30,97 +31,87 @@ const formSchema = z.object({
   }),
   createdBy: z.string().min(1),
   updatedBy: z.string().min(1),
-})
+});
 
 interface TrainingFormProps {
-  initialData: Training | null
+  initialData: Training | null;
 }
 
-type TrainingFormValues = z.infer<typeof formSchema>
+type TrainingFormValues = z.infer<typeof formSchema>;
 
-const TrainingForm: FC<TrainingFormProps> = ({
-  initialData,
-
-}) => {
-  const params = useParams()
-  const router = useRouter()
+const TrainingForm: FC<TrainingFormProps> = ({ initialData }) => {
+  const params = useParams();
+  const router = useRouter();
 
   const currentDate = new Date();
   currentDate.setHours(0, 0, 0, 0);
 
   const { data: session } = useSession();
-  const name = session?.user?.name
+  const name = session?.user?.name;
 
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const [open, setOpen] = useState(false)
-  const [loading, setLoading] = useState(false)
-
-  const title = initialData ? 'Edit Training' : 'New Training'
-  const description = initialData ? 'Edit your Training' : 'Create a new Training'
-  const toastMessage = initialData ? 'Training updated succesfully' : 'Training created succesfully'
-  const action = initialData ? 'Save Changes' : 'Create'
+  const title = initialData ? 'Edit Training' : 'New Training';
+  const description = initialData ? 'Edit your Training' : 'Create a new Training';
+  const toastMessage = initialData ? 'Training updated successfully' : 'Training created successfully';
+  const action = initialData ? 'Save Changes' : 'Create';
 
   const form = useForm<TrainingFormValues>({
   resolver: zodResolver(formSchema),
-  defaultValues: initialData 
+  defaultValues: initialData
     ? {
         ...initialData,
-        startDate: initialData.startDate.toISOString().split('T')[0],
-        endDate: initialData.endDate.toISOString().split('T')[0],
+        startDate: format(new Date(initialData.startDate), "yyyy-MM-dd'T'HH:mm"),
+        endDate: format(new Date(initialData.endDate), "yyyy-MM-dd'T'HH:mm"),
       }
     : {
-        title: '',
-        trainer: '',
-        description: '',
-        startDate: currentDate.toString().split('T')[0],
-        endDate: currentDate.toString().split('T')[0],
-        createdBy: name || '',
-        updatedBy: name || '',
-      }
-})
+        title: "",
+        trainer: "",
+        description: "",
+        startDate: format(currentDate, "yyyy-MM-dd'T'HH:mm"),
+        endDate: format(currentDate, "yyyy-MM-dd'T'HH:mm"),
+        createdBy: name || "",
+        updatedBy: name || "",
+      },
+});
 
   const onSubmit = async (data: TrainingFormValues) => {
     try {
-      setLoading(true)
+      setLoading(true);
 
-      
       if (initialData) {
-        console.log(data)
-        await axios.patch(`/api/records/training/${params.trainingId}`, data)
+        await axios.patch(`/api/records/training/${params.trainingId}`, data);
       } else {
-        await axios.post(`/api/records/training`, data)
+        await axios.post(`/api/records/training`, data);
       }
-      router.refresh()
-      router.push(`/admin/dashboard/trainings`)
-      toast.success(toastMessage)
-      console.log('test')
+      router.refresh();
+      router.push(`/admin/dashboard/trainings`);
+      toast.success(toastMessage);
     } catch (error) {
-      console.log(data)
-      console.log(error)
-      toast.error("Something went wrong while saving your changes")
+      console.log(error);
+      toast.error('Something went wrong while saving your changes');
     } finally {
-      console.log('test2')
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const onDelete = async () => {
-    try {
-      setLoading(true)
-      await axios.delete(`/api/records/training/${params.trainingId}`)
-      router.refresh()
-      router.push(`/admin/dashboard/trainings`)
-      toast.success("Training deleted.")
-      console.log('test')
-    } catch (error) {
-      console.log(error)
-      toast.error("Server Error")
-    } finally {
-      console.log('test2')
-      setLoading(false)
-      setOpen(false)
-    }
+  try {
+    setLoading(true);
+    await axios.delete(`/api/records/training/${params.trainingId}`);
+    router.refresh();
+    router.push(`/admin/dashboard/trainings`);
+    toast.success("Training deleted.");
+  } catch (error) {
+    console.log(error);
+    toast.error("Server Error");
+  } finally {
+    setLoading(false);
+    setOpen(false);
   }
+};
+
 
   return (
     <>
@@ -199,7 +190,7 @@ const TrainingForm: FC<TrainingFormProps> = ({
                   <FormLabel>Start Date</FormLabel>
                   <FormControl>
                     <Input
-                      type="date"
+                      type="datetime-local"
                       disabled={loading}
                       placeholder="Start Date"
                       {...field}
@@ -217,7 +208,7 @@ const TrainingForm: FC<TrainingFormProps> = ({
                   <FormLabel>End Date</FormLabel>
                   <FormControl>
                     <Input
-                      type="date"
+                      type="datetime-local"
                       disabled={loading}
                       placeholder="Start Date"
                       {...field}

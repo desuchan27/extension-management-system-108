@@ -11,8 +11,13 @@ const Navbar = ({ }) => {
     const { data: session, status: loading } = useSession();
 
     const handleSignOut = async () => {
-        await signOut({ callbackUrl: `${window.location.origin}/login` });
+        try{
+            await signOut({ callbackUrl: `${window.location.origin}/login` });
         redirect('/login');
+        } catch(error) {
+            console.log(error)
+        }
+    
     }
 
     return (
