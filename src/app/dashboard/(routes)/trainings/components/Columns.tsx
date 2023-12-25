@@ -2,6 +2,7 @@
 
 import { ColumnDef } from "@tanstack/react-table"
 import CellAction from "./CellAction"
+import TrainingStatus from "./TrainingStatus"
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -40,6 +41,11 @@ export const Columns: ColumnDef<ClientColumn>[] = [
   {
     accessorKey: "updatedBy",
     header: "Updated by",
+  },
+  {
+    accessorKey: "status",
+    header: "Status",
+    cell: ({ row }) => <TrainingStatus training={row.original} />,
   },
   {
     id: 'actions',

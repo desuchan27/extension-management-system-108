@@ -33,7 +33,6 @@ const Client: FC<ClientProps> = ({
       <Separator />
       <DataTable columns={Columns} data={data} searchKey='title' />
     </>
-
   )
 }
 

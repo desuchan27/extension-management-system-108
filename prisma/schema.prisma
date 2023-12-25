@@ -32,3 +32,10 @@ model Training {
   createdBy   String
   updatedBy   String
 }
+
+model Update {
+  id          String   @id @default(uuid())
+  title       String
+  description String
+  createdAt   DateTime @default(now())
+}
