@@ -19,7 +19,9 @@ const page = async ({
       createdAt: 'desc'
     }
   })
+  
   const formattedTrainings: ClientColumn[] = trainings.map((item) => ({
+    id: item.id,
     title: item.title,
     trainer: item.trainer,
     startDate: format(item.startDate, 'MMM do, yyy h:mm a'),

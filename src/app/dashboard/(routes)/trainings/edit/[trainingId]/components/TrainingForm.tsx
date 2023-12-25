@@ -86,7 +86,7 @@ const TrainingForm: FC<TrainingFormProps> = ({ initialData }) => {
         await axios.post(`/api/records/training`, data);
       }
       router.refresh();
-      router.push(`/admin/dashboard/trainings`);
+      router.push(`/dashboard/trainings`);
       toast.success(toastMessage);
     } catch (error) {
       console.log(error);
@@ -101,7 +101,7 @@ const TrainingForm: FC<TrainingFormProps> = ({ initialData }) => {
     setLoading(true);
     await axios.delete(`/api/records/training/${params.trainingId}`);
     router.refresh();
-    router.push(`/admin/dashboard/trainings`);
+    router.push(`/dashboard/trainings`);
     toast.success("Training deleted.");
   } catch (error) {
     console.log(error);

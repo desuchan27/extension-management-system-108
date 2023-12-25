@@ -25,7 +25,7 @@ const Client: FC<ClientProps> = ({
           title={`Training Record (${data.length})`}
           description='view and manage training records'
         />
-        <Button onClick={() => router.push('/admin/dashboard/trainings/new')} >
+        <Button onClick={() => router.push('/dashboard/trainings/edit/new')} >
           <Plus className='mr-4 h-4 w-4' />
           Add New
         </Button>

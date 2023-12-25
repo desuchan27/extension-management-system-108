@@ -12,7 +12,7 @@ export default async function RegistrationLayout({
     const session = await getServerSession()
     
     if (session && session.user) {
-        redirect('/admin/dashboard');
+        redirect('/dashboard');
     }
     return (
         <>

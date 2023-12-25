@@ -13,14 +13,14 @@ export function MainNav({
 
     const routes = [
         {
-            href: '/admin/dashboard',
+            href: '/dashboard',
             label: 'Feed',
-            active: pathName === '/admin/dashboard'
+            active: pathName === '/dashboard'
         },
         {
-            href: `/admin/dashboard/trainings`,
+            href: `/dashboard/trainings`,
             label: 'Records',
-            active: pathName === `/admin/dashboard/trainings`
+            active: pathName === `/dashboard/trainings`
         },
         {
             href: `/null3`,

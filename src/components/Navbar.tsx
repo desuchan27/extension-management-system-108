@@ -23,7 +23,7 @@ const Navbar = ({ }) => {
     return (
         <div className='border-b'>
             <div className="flex h-16 items-center px-4 justify-between">
-                <Link href={'/admin/dashboard'}>
+                <Link href={'/dashboard'}>
                     <h1 className='font-semibold text-lg'>ADMIN DASHBOARD</h1>
                 </Link>
                 <MainNav className='m-6' />

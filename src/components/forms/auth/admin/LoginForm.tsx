@@ -56,7 +56,7 @@ const LoginForm: FC<LoginFormProps> = ({ }) => {
       toast.error('something is wrong while signing in');
     } else {
       toast.success('Logged in successfully!');
-      router.push('/admin/dashboard');
+      router.push('/dashboard');
     }
   } catch (error) {
     console.error('Error during signIn:', error);
