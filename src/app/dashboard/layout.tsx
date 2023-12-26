@@ -3,6 +3,7 @@ import Navbar from '@/components/Navbar'
 import { getServerSession } from 'next-auth'
 import { redirect } from 'next/navigation'
 import { Toaster } from 'react-hot-toast'
+import "@uploadthing/react/styles.css";
 
 
 const Layout = async ({ children }: { children: React.ReactNode }) => {

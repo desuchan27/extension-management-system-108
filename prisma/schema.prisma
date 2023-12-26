@@ -31,6 +31,20 @@ model Training {
   updatedAt   DateTime @updatedAt
   createdBy   String
   updatedBy   String
+
+  documents Document[] @relation("documentToTraining")
+}
+
+model Document {
+  id         String   @id @default(uuid())
+  title      String
+  url        String
+  trainingId String
+  training   Training @relation("documentToTraining", fields: [trainingId], references: [id])
+
+  createdBy String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Update {

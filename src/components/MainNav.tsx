@@ -23,9 +23,9 @@ export function MainNav({
             active: pathName === `/dashboard/trainings`
         },
         {
-            href: `/null3`,
+            href: `/dashboard/documents`,
             label: 'Documents',
-            active: pathName === `/null3`
+            active: pathName === `/dashboard/documents`
         },
     ]
     return (

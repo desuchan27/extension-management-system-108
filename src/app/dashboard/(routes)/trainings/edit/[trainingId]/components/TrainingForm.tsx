@@ -6,7 +6,7 @@ import Heading from '@/components/ui/heading'
 import { Separator } from '@/components/ui/separator'
 import { Training } from '@prisma/client'
 import { Trash } from 'lucide-react'
-import { FC, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
@@ -40,6 +40,10 @@ interface TrainingFormProps {
 type TrainingFormValues = z.infer<typeof formSchema>;
 
 const TrainingForm: FC<TrainingFormProps> = ({ initialData }) => {
+
+
+
+
   const params = useParams();
   const router = useRouter();
 
@@ -51,6 +55,17 @@ const TrainingForm: FC<TrainingFormProps> = ({ initialData }) => {
 
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const { register, handleSubmit, setValue } = useForm();
+
+  useEffect(() => {
+    if (initialData) {
+      // Populate form fields with initial data when in edit mode
+      Object.entries(initialData).forEach(([key, value]) => {
+        setValue(key, value);
+      });
+    }
+  }, [initialData, setValue]);
+
 
   const title = initialData ? 'Edit Training' : 'New Training';
   const description = initialData ? 'Edit your Training' : 'Create a new Training';
@@ -58,14 +73,14 @@ const TrainingForm: FC<TrainingFormProps> = ({ initialData }) => {
   const action = initialData ? 'Save Changes' : 'Create';
 
   const form = useForm<TrainingFormValues>({
-  resolver: zodResolver(formSchema),
-  defaultValues: initialData
-    ? {
+    resolver: zodResolver(formSchema),
+    defaultValues: initialData
+      ? {
         ...initialData,
         startDate: format(new Date(initialData.startDate), "yyyy-MM-dd'T'HH:mm"),
         endDate: format(new Date(initialData.endDate), "yyyy-MM-dd'T'HH:mm"),
       }
-    : {
+      : {
         title: "",
         trainer: "",
         description: "",
@@ -74,11 +89,21 @@ const TrainingForm: FC<TrainingFormProps> = ({ initialData }) => {
         createdBy: name || "",
         updatedBy: name || "",
       },
-});
+  });
 
   const onSubmit = async (data: TrainingFormValues) => {
     try {
       setLoading(true);
+
+      const updateMessage = initialData
+        ? `${initialData.updatedBy} updated the training details`
+        : `${form.getValues('createdBy')} added a new training session named ${form.getValues('title')}`;
+
+
+      await axios.post('/api/records/update', {
+        title: 'Training Update',
+        description: updateMessage,
+      });
 
       if (initialData) {
         await axios.patch(`/api/records/training/${params.trainingId}`, data);
@@ -97,20 +122,20 @@ const TrainingForm: FC<TrainingFormProps> = ({ initialData }) => {
   };
 
   const onDelete = async () => {
-  try {
-    setLoading(true);
-    await axios.delete(`/api/records/training/${params.trainingId}`);
-    router.refresh();
-    router.push(`/dashboard/trainings`);
-    toast.success("Training deleted.");
-  } catch (error) {
-    console.log(error);
-    toast.error("Server Error");
-  } finally {
-    setLoading(false);
-    setOpen(false);
-  }
-};
+    try {
+      setLoading(true);
+      await axios.delete(`/api/records/training/${params.trainingId}`);
+      router.refresh();
+      router.push(`/dashboard/trainings`);
+      toast.success("Training deleted.");
+    } catch (error) {
+      console.log(error);
+      toast.error("Server Error");
+    } finally {
+      setLoading(false);
+      setOpen(false);
+    }
+  };
 
 
   return (
