@@ -4,7 +4,7 @@ import { FC, useState } from 'react'
 import { ClientColumn } from './Columns'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { Button } from '@/components/ui/button'
-import { Copy, Edit, MoreHorizontal, Trash } from 'lucide-react'
+import { AppWindow, Copy, Edit, MoreHorizontal, Trash } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { useParams, useRouter } from 'next/navigation'
 import axios from 'axios'
@@ -23,9 +23,8 @@ const CellAction: FC<CellActionProps> = ({
     const [loading, setLoading] = useState(false)
     const [open, setOpen] = useState(false)
 
-    const onCopy = (id: string) => {
-        navigator.clipboard.writeText(id)
-        toast.success("Training ID copied to clipboard")
+    const onOpen = (id: string) => {
+        router.push(`/dashboard/trainings/${id}`);
     }
 
     const onDelete = async () => {
@@ -65,9 +64,9 @@ const CellAction: FC<CellActionProps> = ({
                     <DropdownMenuLabel>
                         Actions
                     </DropdownMenuLabel>
-                    <DropdownMenuItem onClick={() => onCopy(data.id)}>
-                        <Copy className='mr-2 h-4 w-4' />
-                        Copy ID
+                    <DropdownMenuItem onClick={() => onOpen(data.id)}>
+                        <AppWindow className='mr-2 h-4 w-4' />
+                        Open Training
                     </DropdownMenuItem>
                     <DropdownMenuItem onClick={() => router.push(`/dashboard/trainings/edit/${data.id}`)}>
                         <Edit className='mr-2 h-4 w-4' />

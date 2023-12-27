@@ -29,8 +29,8 @@ const formSchema = z.object({
 })
 
 interface DocumentFormProps {
-    initialData: Document | null,
     trainings: Training[]
+    onSuccess: () => void
 }
 
 type UploadFileResponse = {
@@ -42,8 +42,8 @@ type UploadFileResponse = {
 type DocumentFormValues = z.infer<typeof formSchema>
 
 const DocumentForm: FC<DocumentFormProps> = ({
-    initialData,
-    trainings
+    trainings,
+    onSuccess
 }) => {
 
 
@@ -58,7 +58,7 @@ const DocumentForm: FC<DocumentFormProps> = ({
 
     const form = useForm<DocumentFormValues>({
         resolver: zodResolver(formSchema),
-        defaultValues: initialData || {
+        defaultValues: {
             title: '',
             url: '',
             trainingId: '',
@@ -75,14 +75,12 @@ const DocumentForm: FC<DocumentFormProps> = ({
             : `${form.getValues('createdBy')} added a new file to ${form.getValues('title')}`;
                 */
 
-            if (initialData) {
-                await axios.patch(`/api/records/document/${params.documentId}`, data)
-            } else {
+
                 await axios.post(`/api/records/document`, data)
-            }
             router.refresh()
             router.push(`/dashboard/documents`)
             toast.success('Document Added Succesfully')
+            onSuccess()
         } catch (error) {
             toast.error("Something went wrong while saving your changes")
         } finally {
@@ -113,25 +111,6 @@ const DocumentForm: FC<DocumentFormProps> = ({
                 onConfirm={onDelete}
                 loading={loading}
             />
-            <div className='flex items-center justify-between'>
-                <Heading
-                    title='New Document'
-                    description='Upload a new Document'
-                />
-                {initialData && (
-                    <Button
-
-                        disabled={loading}
-                        variant='destructive'
-                        size='icon'
-                        onClick={() => {
-                            setOpen(true)
-                        }}
-                    >
-                        <Trash className='h-4 w-4' />
-                    </Button>
-                )}
-            </div>
             <Separator />
             <Form {...form}>
                 <form

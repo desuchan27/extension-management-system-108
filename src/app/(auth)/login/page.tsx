@@ -10,8 +10,6 @@ interface PageProps {
 
 const Page: FC<PageProps> = ({
 }) => {
-
-  const router = useRouter()
   
   return <div> <LoginForm /></div>
 }

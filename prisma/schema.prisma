@@ -32,7 +32,8 @@ model Training {
   createdBy   String
   updatedBy   String
 
-  documents Document[] @relation("documentToTraining")
+  documents    Document[]    @relation("documentToTraining")
+  participants Participant[] @relation("participantToTraining")
 }
 
 model Document {
@@ -45,6 +46,19 @@ model Document {
   createdBy String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Participant {
+  id         String   @id @default(uuid())
+  name       String
+  age        Int
+  email      String?
+  gender     String
+  trainingId String
+  training   Training @relation("participantToTraining", fields: [trainingId], references: [id])
+  addedBy    String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }
 
 model Update {

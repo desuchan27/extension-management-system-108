@@ -14,6 +14,7 @@ const page = async ({
       id: params.trainingId
     },
   })
+  
   return (
     <div>
       <TrainingForm initialData={training}  />

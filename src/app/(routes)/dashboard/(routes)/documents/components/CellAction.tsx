@@ -4,7 +4,7 @@ import { FC, useState } from 'react'
 import { ClientColumn } from './Columns'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { Button } from '@/components/ui/button'
-import { Copy, Edit, MoreHorizontal, Trash } from 'lucide-react'
+import { Copy, Edit, Link, MoreHorizontal, Trash } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { useParams, useRouter } from 'next/navigation'
 import axios from 'axios'
@@ -18,20 +18,18 @@ const CellAction: FC<CellActionProps> = ({
 }) => {
 
     const router = useRouter()
-    const params = useParams()
 
     const [loading, setLoading] = useState(false)
     const [open, setOpen] = useState(false)
 
-    const onCopy = (id: string) => {
-        navigator.clipboard.writeText(id)
-        toast.success("Training ID copied to clipboard")
+    const onClick = (url: string) => {
+        window.open(url, '_blank')
     }
 
     const onDelete = async () => {
     try {
         setLoading(true);
-        await axios.delete(`/api/records/training/${data.id}`);
+        await axios.delete(`/api/records/document/${data.id}`);
         router.refresh();
         toast.success("Training deleted.");
     } catch (error) {
@@ -65,13 +63,9 @@ const CellAction: FC<CellActionProps> = ({
                     <DropdownMenuLabel>
                         Actions
                     </DropdownMenuLabel>
-                    <DropdownMenuItem onClick={() => onCopy(data.id)}>
-                        <Copy className='mr-2 h-4 w-4' />
-                        Copy ID
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => router.push(`/dashboard/trainings/edit/${data.id}`)}>
-                        <Edit className='mr-2 h-4 w-4' />
-                        Update
+                    <DropdownMenuItem onClick={() => onClick(data.url)}>
+                        <Link className='mr-2 h-4 w-4' />
+                        Open File
                     </DropdownMenuItem>
                     <DropdownMenuItem
                         className='text-red-600'

@@ -8,8 +8,9 @@ import { format } from 'date-fns'
 const page = async ({
   params
 }: {
-  params: { documentId: string }
+  params: { documentId: string, trainingId: string }
 }) => {
+  
 
   const documents = await db.document.findMany({
     where: {
@@ -22,20 +23,28 @@ const page = async ({
       createdAt: 'desc'
     },
   })
+
+
+    const training = await db.training.findMany({
+        where: {
+            id: params.trainingId
+        }
+    })
   
   const formattedDocuments: ClientColumn[] = documents.map((item) => ({
     id: item.id,
     title: item.title,
     training: item.training.title,
     createdBy: item.createdBy,
-    createdAt: format(item.createdAt, 'MMM do, yyy h:mm a'),
+    createadAt: format(new Date(item.createdAt), 'MM/dd/yyyy'),
+    url: item.url
   }))
 
 
   return (
     <div className='flex-col'>
       <div className="flex-1 space-y-4 p-8 pt-6">
-        <Client data={formattedDocuments} />
+        <Client data={formattedDocuments} initialData={null} training={training} />
       </div>
     </div>
   )

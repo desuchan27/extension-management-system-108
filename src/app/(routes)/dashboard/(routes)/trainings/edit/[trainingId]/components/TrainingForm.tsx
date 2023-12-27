@@ -55,7 +55,7 @@ const TrainingForm: FC<TrainingFormProps> = ({ initialData }) => {
 
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const { register, handleSubmit, setValue } = useForm();
+  const { setValue } = useForm();
 
   useEffect(() => {
     if (initialData) {

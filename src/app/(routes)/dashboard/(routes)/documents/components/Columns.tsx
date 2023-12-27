@@ -11,7 +11,7 @@ export type ClientColumn = {
   url: string
   training: string
   createdBy: string
-  updatedAt: string
+  createadAt: string
 }
 
 export const Columns: ColumnDef<ClientColumn>[] = [
@@ -28,8 +28,12 @@ export const Columns: ColumnDef<ClientColumn>[] = [
     header: 'Created By',
   },
   {
-    accessorKey: 'updatedAt',
-    header: 'Updated At',
+    accessorKey: 'url',
+    header: 'Link',
+  },
+  {
+    accessorKey: 'createadAt',
+    header: 'Created At',
   },
   {
     id: 'actions',
