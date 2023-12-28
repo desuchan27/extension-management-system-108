@@ -1,6 +1,7 @@
 "use client"
 
 import { Badge } from '@/components/ui/badge';
+import Heading from '@/components/ui/heading';
 import { Separator } from '@/components/ui/separator';
 import { Training } from '@prisma/client'
 import { Calendar, CalendarIcon } from 'lucide-react';
@@ -23,23 +24,26 @@ const TrainingData: FC<TrainingDataProps> = ({ trainingData }) => {
 
   return (
     <div className='h-full'>
+      <span className='flex text-xs text-slate-500 space-x-2 mt-2 mb-2'>
+        <p
+          onClick={() => router.push('/dashboard/trainings')}
+          className='cursor-pointer hover:text-primary'
+        >
+          Records
+        </p>
+        <p>/</p>
+        <p
+          onClick={() => router.push(`/dashboard/trainings/${params.trainingId}`)}
+          className='cursor-pointer hover:text-primary'
+        >
+          {trainingData?.title || ''}
+        </p>
+      </span>
       <div className='mb-4'>
-        <h1 className='text-xl font-bold w-full'>Training Details</h1>
-        <span className='flex text-xs text-slate-500 space-x-2'>
-          <p
-            onClick={() => router.push('/dashboard/trainings')}
-            className='cursor-pointer'
-          >
-            records
-          </p>
-          <p>/</p>
-          <p 
-            onClick={() => router.push(`/dashboard/trainings/${params.trainingId}`)}
-            className='cursor-pointer'
-          > 
-            training details
-          </p>
-        </span>
+        <Heading
+          title={trainingData?.title || ''}
+          description='view training details'
+        />
       </div>
       <Separator />
       <div className='mt-4 mb-4'>

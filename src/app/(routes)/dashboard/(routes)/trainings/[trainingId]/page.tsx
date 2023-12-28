@@ -4,6 +4,8 @@ import TrainingData from './components/TrainingData'
 import db from '@/lib/db'
 import DocumentData from './components/DocumentData'
 import ParticipantData from './components/ParticipantData'
+import { ClientColumn } from './components/Columns'
+import { format } from 'date-fns'
 
 interface pageProps {
 
@@ -31,6 +33,33 @@ const page = async ({
         }
     })
 
+    const documents = await db.document.findMany({
+        where: {
+            id: params.documentId
+        },
+        include: {
+            training: true
+        },
+        orderBy: {
+            createdAt: 'desc'
+        },
+    })
+
+    const trainings = await db.training.findMany({
+        include: {
+            documents: true
+        }
+    })
+
+    const formattedDocuments: ClientColumn[] = documents.map((item) => ({
+        id: item.id,
+        title: item.title,
+        training: item.training.title,
+        createdBy: item.createdBy,
+        createadAt: format(new Date(item.createdAt), 'MM/dd/yyyy'),
+        url: item.url
+    }))
+
     return (
         <div className='bg-white w-full h-screen'>
             <div className="hidden md:flex gap-x-4 justify-center">
@@ -39,7 +68,7 @@ const page = async ({
                         <TrainingData trainingData={training} />
                     </div>
                     <div>
-                        {training && <DocumentData documentData={training.documents} />}
+                        {training && <DocumentData documentData={training.documents} data={formattedDocuments} training={trainings} />}
                     </div>
                 </div>
                 <div className="md:w-1/3 lg:w-1/5">

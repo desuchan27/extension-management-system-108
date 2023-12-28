@@ -4,9 +4,9 @@ import * as z from "zod"
 import { Button } from '@/components/ui/button'
 import Heading from '@/components/ui/heading'
 import { Separator } from '@/components/ui/separator'
-import { Document, Training } from '@prisma/client'
+import { Document, Participant, Training } from '@prisma/client'
 import { Trash, Upload } from 'lucide-react'
-import { FC, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
@@ -18,6 +18,7 @@ import AlertModal from "@/components/modals/AlertModal"
 import { useSession } from "next-auth/react"
 import { UploadButton, UploadDropzone } from "@/utils/uploadthing"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import ParticipantData from "../ParticipantData"
 
 
 
@@ -32,13 +33,15 @@ const formSchema = z.object({
 
 interface ParticipantFormProps {
     onSuccess: () => void
+    participantData: Participant | null
     trainingData: Training | null
 }
 
 type ParticipantFormValues = z.infer<typeof formSchema>
 
+
 const ParticipantForm: FC<ParticipantFormProps> = ({
-    onSuccess
+    onSuccess, participantData, trainingData
 }) => {
 
     const params = useParams()
@@ -56,31 +59,55 @@ const ParticipantForm: FC<ParticipantFormProps> = ({
         defaultValues: {
             name: '',
             age: 0,
-            email: '',
+            email: participantData?.email ?? '',
             gender: '',
             trainingId: getTrainingId || '',
             addedBy: name || '',
         }
     })
 
+    const transformParticipantData = (data: ParticipantFormValues): ParticipantFormValues => {
+        return {
+            ...data,
+            email: data.email !== null ? data.email : undefined,
+        };
+    };
+
+
+    useEffect(() => {
+        console.log('Participant ID:', participantData?.id);
+        if (participantData) {
+            const transformedData: ParticipantFormValues = {
+                ...participantData,
+                email: participantData.email !== null ? participantData.email : undefined,
+            };
+            form.reset(transformedData);
+        }
+    }, [participantData, form]);
+
     const onSubmit = async (data: ParticipantFormValues) => {
         try {
             setLoading(true)
 
-            
+
             /*    const updateMessage = initialData
             ? `${initialData.createdBy} added a new document to ${training?.title} named ${initialData.title}`
             : `${form.getValues('createdBy')} added a new file to ${form.getValues('title')}`;
                 */
+            
 
-
-            await axios.post(`/api/records/participant`, data)
-            router.refresh()
-            router.push(`/dashboard/trainings/${params.trainingId}`)
-            toast.success('Participant added succesfully')
-            onSuccess()
+            if (participantData) {
+                await axios.patch(`/api/records/participant/${params.participantId}`, transformParticipantData(data));
+                toast.success('Participant updated successfully');
+            } else {
+                await axios.post(`/api/records/participant`, transformParticipantData(data));
+                toast.success('Participant added successfully');
+            }
+            router.refresh();
+            router.push(`/dashboard/trainings/${params.trainingId}`);
+            console.log(data)
+            onSuccess();
         } catch (error) {
-
 
             toast.error("Something went wrong while saving your changes")
         } finally {

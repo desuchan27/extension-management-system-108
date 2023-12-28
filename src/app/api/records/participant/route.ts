@@ -11,6 +11,7 @@ export async function POST(
 
         const { name, age, email, gender, trainingId, addedBy } = body;
 
+
         if (!name) {
             return new NextResponse("Name is required", { status: 400 })
         }
