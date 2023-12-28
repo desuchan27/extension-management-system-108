@@ -78,7 +78,7 @@ const DocumentForm: FC<DocumentFormProps> = ({
 
                 await axios.post(`/api/records/document`, data)
             router.refresh()
-            router.push(`/dashboard/documents`)
+            router.push(`/dashboard/training/${params.trainingId}`)
             toast.success('Document Added Succesfully')
             onSuccess()
         } catch (error) {
@@ -93,7 +93,7 @@ const DocumentForm: FC<DocumentFormProps> = ({
             setLoading(true)
             await axios.delete(`/api/records/document/${params.documentId}`)
             router.refresh()
-            router.push(`/dashboard/documents`)
+            router.push(`/dashboard/training/${params.trainingId}`)
             toast.success("Document deleted.")
         } catch (error) {
             toast.error("Something is wrong. Please try again later.")
@@ -199,7 +199,7 @@ const DocumentForm: FC<DocumentFormProps> = ({
                                                         .then((response) => {
                                                             console.log('Upload successful:', response);
                                                             toast.success('Uploaded successfully');
-                                                            router.push(`/dashboard/documents`)
+                                                            router.push(`/dashboard/trainings/${params.trainingId}`)
                                                         })
                                                         .catch((error) => {
                                                             console.error('Error during upload:', error);
