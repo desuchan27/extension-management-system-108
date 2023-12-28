@@ -45,7 +45,7 @@ const ParticipantData: FC<ParticipantDataProps> = ({
                     onClick={() => handleModalOpen()} // Open modal for a new participant
                     className='text-xs'
                 >
-                    <Plus className='scale-75 transform' />Add New
+                    <Plus className='scale-75 transform' />
                 </Button>
             </div>
             <Separator />

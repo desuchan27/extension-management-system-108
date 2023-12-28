@@ -35,7 +35,7 @@ const page = async ({
 
     const documents = await db.document.findMany({
         where: {
-            id: params.documentId
+            trainingId: params.trainingId
         },
         include: {
             training: true

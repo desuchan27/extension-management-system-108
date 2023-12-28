@@ -53,6 +53,7 @@ const DocumentForm: FC<DocumentFormProps> = ({
     const { data: session } = useSession();
     const name = session?.user?.name;
 
+
     const [open, setOpen] = useState(false)
     const [loading, setLoading] = useState(false)
 
@@ -67,8 +68,14 @@ const DocumentForm: FC<DocumentFormProps> = ({
     })
 
     const onSubmit = async (data: DocumentFormValues) => {
+
         try {
             setLoading(true)
+
+            const { trainingId } = params
+
+            data.trainingId = trainingId as string;
+
 
             /*    const updateMessage = initialData
             ? `${initialData.createdBy} added a new document to ${training?.title} named ${initialData.title}`
@@ -76,7 +83,7 @@ const DocumentForm: FC<DocumentFormProps> = ({
                 */
 
 
-                await axios.post(`/api/records/document`, data)
+            await axios.post(`/api/records/document`, data)
             router.refresh()
             router.push(`/dashboard/training/${params.trainingId}`)
             toast.success('Document Added Succesfully')
@@ -131,43 +138,7 @@ const DocumentForm: FC<DocumentFormProps> = ({
                         )}
                     />
 
-                    <FormField
-                        control={form.control}
-                        name='trainingId'
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Training</FormLabel>
-                                <Select
-                                    disabled={loading}
-                                    onValueChange={field.onChange}
-                                    value={field.value}
-                                    defaultValue={field.value}
-                                >
-                                    <FormControl>
-                                        <SelectTrigger>
-                                            <SelectValue
-                                                defaultValue={field.value}
-                                                placeholder="Select training"
-                                            />
-                                        </ SelectTrigger>
-                                    </FormControl>
-                                    <SelectContent>
-                                        {trainings.map((training) => (
-                                            <SelectItem
-                                                key={training.id}
-                                                value={training.id}
-                                            >
-                                                {training.title}
-                                            </SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </ Select>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-
-                    {form.getValues('title') && form.getValues('trainingId') && (
+                    {form.getValues('title') && (
                         <FormField
                             control={form.control}
                             name='url'
@@ -177,20 +148,17 @@ const DocumentForm: FC<DocumentFormProps> = ({
                                     <FormControl>
                                         <UploadDropzone
                                             endpoint="pdfUploader"
-
                                             onClientUploadComplete={(res: UploadFileResponse[]) => {
-
-
                                                 // Do something with the response
                                                 console.log("Files: ", res);
 
-                                                // Assuming `title` and `trainingId` are required
-                                                if (form.getValues('title') && form.getValues('trainingId')) {
+                                                // Assuming `title` is required
+                                                if (form.getValues('title')) {
                                                     const name = session?.user?.name;
                                                     // You can now make a POST request with title, trainingId, and url
                                                     const postData = {
                                                         title: form.getValues('title'),
-                                                        trainingId: form.getValues('trainingId'),
+                                                        trainingId: params.trainingId, // Automatically include the trainingId
                                                         url: res[0].url, // Assuming you want the first file's URL
                                                         createdBy: name || '', // Include the createdBy field
                                                     };
@@ -199,13 +167,13 @@ const DocumentForm: FC<DocumentFormProps> = ({
                                                         .then((response) => {
                                                             console.log('Upload successful:', response);
                                                             toast.success('Uploaded successfully');
-                                                            router.push(`/dashboard/trainings/${params.trainingId}`)
+                                                            router.push(`/dashboard/trainings/${params.trainingId}`);
                                                         })
                                                         .catch((error) => {
                                                             console.error('Error during upload:', error);
                                                         });
                                                 } else {
-                                                    console.warn('Title and trainingId are required before uploading.');
+                                                    console.warn('Title is required before uploading.');
                                                 }
                                             }}
                                             onUploadError={(error: Error) => {
@@ -219,6 +187,7 @@ const DocumentForm: FC<DocumentFormProps> = ({
                             )}
                         />
                     )}
+
 
                 </form>
             </Form>
